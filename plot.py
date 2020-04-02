@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from bokeh.palettes import Colorblind as palette
 from bokeh.plotting import figure, output_file, show
+import bokeh.models
 
 BASE_DIRECTORY = "COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
 
@@ -106,12 +107,20 @@ def deaths_since_start(countries: List[str]):
     colours = cycle(palette[8])
 
     fig = figure(
-        x_axis_label='Days since spread started in each country', 
+        x_axis_label='Days since deaths started in each country', 
         y_axis_label='Percentage of the population',
         plot_width=800,
         plot_height=500,
-        id="plot_1"
+        id="plot_1",
+        active_drag="pan",
+        active_scroll="wheel_zoom",
         )
+    
+    # add the hover tool and configure it to be useful
+    fig.add_tools(bokeh.models.HoverTool())
+    hover = fig.select(dict(type=bokeh.models.HoverTool))
+    hover.tooltips = [("Country", "@series_name"), ("Day", "@x"),  ("Value", "@y"),]
+    hover.mode = 'mouse'
 
     for country in COUNTRY_DATA.keys():
         series = convert_index(COUNTRY_DATA[country]['normalised_data']).deaths
