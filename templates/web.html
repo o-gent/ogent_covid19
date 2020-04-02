@@ -1,0 +1,105 @@
+<html>
+<head>
+
+<link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.css" type="text/css" />
+<link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.css" type="text/css">
+
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-api-2.0.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.js"></script>
+
+<style>
+
+html {
+  text-align: -webkit-center;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color:#f5f5f5;
+}
+
+body {
+    max-width: 1000px;
+    background-color: white;
+    border-radius: 3em;
+}
+
+div.main{
+    max-width: 800px;
+}
+
+h3{
+    padding-top: 2em;
+}
+
+div.end {
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+footer{
+    padding-bottom: 2em;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="main">
+    <H1 style="padding: 1em;"> Covid-19 data central </H1>
+
+    <p>
+        last update: {{ last_update }}
+    </p>
+
+    <h2> 
+        <i>ℹnfo</i> 
+    </h2>
+
+    <p>
+        This web page aims to inform the reader about the spread of the COVID-19 virus without an opinion, just show what is happening around the world in a hopefully intuitive way. 
+    </p>
+    <p>
+        The page data is refreshed daily inline with the source data which can be found at <a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a> which has been organised by Johns Hopkins CSSE and
+        sources its data from goverment websites.
+    </p>
+    <p>
+        The source code for this website and data exploration of the dataset can be found at <a href="https://github.com/o-gent/ogent_covid19">github.com/o-gent/ogent_covid19</a>
+    </p>
+    <p>
+        <b>disclaimer: </b> This project has been done in my free time and you should cross reference with other data sources as I give no guarantee any of the information is correct, only 
+        that I have made my best effort ensure it is. Also I'm not a website designer and never intend to be 🤮
+    </p>
+
+
+
+    <h3>Cumulative deaths by COVID-19</h3>
+    {{ script_plot1|safe }}
+    {{ div_plot1|safe }}
+    <p>
+        Description for plot 1
+    </p>
+
+
+    <h3>
+        Title 2
+    </h3>
+
+    <p>
+        Description for plot 2
+    </p>
+
+</div>
+
+<div class="end">
+    <i>fin</i>
+</div>
+
+</body>
+
+<footer>
+    Oliver Gent
+</footer>
+
+</html>

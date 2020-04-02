@@ -2,6 +2,8 @@
 
 Yet another data expoloration of covid-19
 
+oh and it's a website, built in Flask.
+
 ## Datasets
 
 Same dataset: 
