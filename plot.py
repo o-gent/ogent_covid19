@@ -1,3 +1,9 @@
+# get new data from github repository https://github.com/CSSEGISandData/COVID-19
+import subprocess
+process = subprocess.Popen("cd COVID-19 & git fetch & git pull", stdout=subprocess.PIPE, shell=True)
+print(process.communicate()[0].strip().decode())
+
+
 # imports and globals
 from itertools import cycle
 from os.path import join
@@ -10,6 +16,13 @@ from bokeh.palettes import Colorblind as palette
 from bokeh.plotting import figure, output_file, show
 import bokeh.models
 
+BASE_DIRECTORY = "COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
+
+# imports and globals
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from os.path import join
 BASE_DIRECTORY = "COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
 
 COUNTRY_DATA = {
@@ -40,14 +53,79 @@ COUNTRY_DATA = {
     "Korea, South": {
         "population": 51470000, #2017
         "province": "",
+    },
+    "US": {
+        "population": 327200000, #2018
+        "province": "",
+    },
+    "New York": {
+        "population": 8623000, #2017
+        "province": "",
     }
 }
+
 
 
 # load the datasets
 confirmed = pd.read_csv(join(BASE_DIRECTORY, "time_series_covid19_confirmed_global.csv"))
 deaths = pd.read_csv(join(BASE_DIRECTORY, "time_series_covid19_deaths_global.csv"))
 recovered = pd.read_csv(join(BASE_DIRECTORY, "time_series_covid19_recovered_global.csv"))
+# load the US dataset (which is in a different format)
+confirmed_US = pd.read_csv(join(BASE_DIRECTORY,"time_series_covid19_confirmed_US.csv"))
+deaths_US = pd.read_csv(join(BASE_DIRECTORY,"time_series_covid19_deaths_US.csv"))
+
+
+def read_us(confirmed_US, deaths_US, state: str):
+    global deaths, confirmed
+    """
+    accept a US formatted dataframe, which could be filtered by state
+    """
+    confirmed_US_sum = pd.Series()
+    deaths_US_sum = pd.Series()
+
+    for column in confirmed_US:
+        try:
+            confirmed_US_sum[column] = int(confirmed_US[column].sum())
+            deaths_US_sum[column] = int(deaths_US[column].sum())
+
+        except Exception as e:
+            confirmed_US_sum[column] = ""
+            deaths_US_sum[column] = ""
+    
+    # Need to reformat it a bit
+    try:
+        confirmed_US_sum = confirmed_US_sum.drop(['UID', 'iso2', 'iso3', 'code3', 'FIPS', 'Admin2', 'Province_State', 'Country_Region', 'Lat', 'Long_', 'Combined_Key'])
+        deaths_US_sum = deaths_US_sum.drop(['UID', 'iso2', 'iso3', 'code3', 'FIPS', 'Admin2', 'Province_State', 'Country_Region', 'Lat', 'Long_', 'Combined_Key'])
+    except:
+        # already done
+        pass
+
+    confirmed_US_sum['Province/State'] = ""
+    confirmed_US_sum['Country/Region'] = state
+    confirmed_US_sum['Lat'] = 0
+    confirmed_US_sum['Long'] = 0    
+    deaths_US_sum['Province/State'] = ""
+    deaths_US_sum['Country/Region'] = state
+    deaths_US_sum['Lat'] = 0
+    deaths_US_sum['Long'] = 0
+
+    # format to df and reorder the columns
+    us_deaths = deaths_US_sum.to_frame().T
+    us_deaths = us_deaths[deaths.columns]
+    us_confirmed = confirmed_US_sum.to_frame().T
+    us_confirmed = us_confirmed[confirmed.columns]
+
+    # merge the datasets
+    confirmed = pd.concat([confirmed, us_confirmed], ignore_index=True)
+    deaths = pd.concat([deaths, us_deaths], ignore_index=True)    
+    return confirmed, deaths
+
+
+# load in US state data
+states = ["New York"]
+for state in states:
+    confirmed, deaths = read_us(confirmed_US[confirmed_US["Province_State"] == state], deaths_US[deaths_US["Province_State"] == state], state)
+
 
 def load(country: str, state: str) -> pd.DataFrame:
     """
@@ -66,9 +144,14 @@ def load(country: str, state: str) -> pd.DataFrame:
     deaths_result = state_df.drop(['Province/State', 'Country/Region', 'Lat', 'Long'], axis=1).T
 
     # recovered
-    country_df = recovered[recovered['Country/Region'] == country].replace(np.nan, "")
-    state_df = country_df[country_df['Province/State'] == state]
-    recovered_result = state_df.drop(['Province/State', 'Country/Region', 'Lat', 'Long'], axis=1).T
+    # try except to deal with US states without recovered data
+    try:
+        country_df = recovered[recovered['Country/Region'] == country].replace(np.nan, "")
+        state_df = country_df[country_df['Province/State'] == state]
+        recovered_result = state_df.drop(['Province/State', 'Country/Region', 'Lat', 'Long'], axis=1).T
+        recovered_result[0]
+    except:
+        recovered_result = deaths_result
 
     # combine the series to one dataframe
     df_result = pd.concat([confirmed_result, deaths_result, recovered_result], axis =1)
@@ -122,7 +205,7 @@ def deaths_since_start(countries: List[str]):
     hover.tooltips = [("Country", "@series_name"), ("Day", "@x"),  ("Value", "@y"),]
     hover.mode = 'mouse'
 
-    for country in COUNTRY_DATA.keys():
+    for country in countries:
         series = convert_index(COUNTRY_DATA[country]['normalised_data']).deaths
         fig.line(series.index, series.values, legend_label=country, line_width=2, color=next(colours))
 

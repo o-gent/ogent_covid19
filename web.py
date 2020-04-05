@@ -10,12 +10,13 @@ from bokeh.embed import components
 from flask import Flask, render_template, request
 from flask.logging import default_handler
 
-from plot import deaths_since_start
+from plot import deaths_since_start, COUNTRY_DATA
 
 last_update = datetime.now().strftime("%B %d, %Y %H:%M")
 
-# start flask server
+# start flask app
 app = Flask(__name__)
+
 
 # set up flask logging
 class RequestFormatter(logging.Formatter):
@@ -47,10 +48,17 @@ def index():
     Graphs are rendered each time the page is loaded
     """
     # User input for countries
-    countries = request.args.get("countries")
-    if countries == None:
+    countries = []
+    for country in COUNTRY_DATA.keys():
+        if request.args.get(country) == "on":
+            countries.append(country)
+    
+    logging.info(f"selected {countries}")
+
+    if countries == []:
         # pick some default countries
-        countries = []
+        countries = ["United Kingdom", "New York"]
+
 
     # generate plot 1
     script_plot1, div_plot1 = components(deaths_since_start(countries))
@@ -63,9 +71,11 @@ def index():
         "web.html", 
         script_plot1=script_plot1,  
         div_plot1=div_plot1,
-        last_update=last_update
+        last_update=last_update,
+        countries = list(COUNTRY_DATA.keys())
     )
 
 
 if __name__ == '__main__':
+    # start the flask server
 	app.run(port=5000, debug=True)

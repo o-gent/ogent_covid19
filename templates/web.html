@@ -72,7 +72,16 @@ footer{
         that I have made my best effort ensure it is. Also I'm not a website designer and never intend to be 🤮
     </p>
 
-
+    <h2>
+        Select countries
+    </h2>
+    <form action="/" method="get">
+        {% for country in countries %}
+        <input type="checkbox" name="{{ country }}"">
+        <label for"hello"> {{ country }}</label><br>
+        {% endfor %}
+        <input type="submit" value="Submit">
+      </form>
 
     <h3>Cumulative deaths by COVID-19</h3>
     {{ script_plot1|safe }}
