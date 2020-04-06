@@ -37,7 +37,11 @@ formatter = RequestFormatter(
 
 default_handler.setFormatter(formatter)
 
-logging.basicConfig(filename='app_log.log',level=logging.DEBUG)
+logging.basicConfig(filename='app_log.log',level=logging.INFO)
+logging.FileHandler('app_log.log', mode='a')
+
+root = logging.getLogger()
+root.addHandler(default_handler)
 
 
 # begin app code
@@ -47,6 +51,8 @@ def index():
     Main report page
     Graphs are rendered each time the page is loaded
     """
+    logging.info(f"{datetime.now():%Y-%m-%d %H:%M:%S%z} | {request.remote_addr} | {request.url}")
+
     # User input for countries
     countries = []
     for country in plot.COUNTRY_DATA.keys():

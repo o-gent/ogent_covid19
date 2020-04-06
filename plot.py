@@ -20,14 +20,7 @@ from matplotlib.figure import Figure
 import matplotlib
 matplotlib.use('Agg')
 
-BASE_DIRECTORY = "COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
-
-# imports and globals
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from os.path import join
-BASE_DIRECTORY = "COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
+BASE_DIRECTORY = "COVID-19/csse_covid_19_data/csse_covid_19_time_series"
 
 COUNTRY_DATA = {
     "United Kingdom": {
@@ -50,6 +43,18 @@ COUNTRY_DATA = {
         "population":60480000, #2018
         "province": "",
     },
+    "Poland" :{
+        "population":37980000, #2018
+        "province": "",
+    },
+    "Norway" : {
+        "population": 5368000, #2020
+        "province": "",
+    },
+    "Sweden" : {
+        "population" : 10120000, #2018
+        "province": "",
+    },
     "China" : {
         "population": 59020000, # 2017 just Hubei
         "province": "Hubei",
@@ -65,7 +70,7 @@ COUNTRY_DATA = {
     "New York": {
         "population": 8623000, #2017
         "province": "",
-    }
+    },
 }
 
 
