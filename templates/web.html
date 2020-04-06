@@ -1,6 +1,12 @@
 <html>
 <head>
 
+<meta charset="UTF-8">
+<meta name="description" content="COVID-19 Data central">
+<meta name="keywords" content="Covid, Covid19, virus, data, data analysis">
+<meta name="author" content="Oliver Gent">
+<meta name="viewport" content="maximum-scale=1">
+
 <link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.css" type="text/css" />
 <link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.css" type="text/css" />
 <link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.css" type="text/css">
@@ -48,9 +54,21 @@ label{
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    margin: 4px 2px;
+    margin: 0.5em 1em;
     cursor: pointer;
     border-radius: 16px;
+}
+
+@media only screen and (max-width: 768px) {
+    label {
+        font-size: x-large;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    input[type="submit"]{
+        font-size: x-large;
+    }
 }
 
 div.end {
