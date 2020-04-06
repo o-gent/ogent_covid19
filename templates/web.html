@@ -14,6 +14,7 @@
 
 html {
   text-align: -webkit-center;
+  text-align: -moz-center;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background-color:#f5f5f5;
 }
@@ -54,51 +55,107 @@ footer{
     </p>
 
     <h2> 
-        <i>ℹnfo</i> 
+        <i>info</i> 
     </h2>
 
-    <p>
-        <b>description:</b>This web page aims to inform the reader about the spread of the COVID-19 virus without an opinion, just show what is happening around the world in a hopefully intuitive way. 
-    </p>
-    <p>
-        <b>data:</b>The page data is refreshed daily inline with the source data which can be found at <a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a> which has been organised by Johns Hopkins CSSE and
-        sources its data from goverment websites.
-    </p>
-    <p>
-        <b>code:</b>The source code for this website and data exploration of the dataset can be found at <a href="https://github.com/o-gent/ogent_covid19">github.com/o-gent/ogent_covid19</a>
-    </p>
-    <p>
-        <b>disclaimer: </b> This project has been done in my free time and you should cross reference with other data sources as I give no guarantee any of the information is correct, only 
-        that I have made my best effort ensure it is. Also I'm not a website designer and never intend to be 🤮
-    </p>
+    <div style="text-align: left;">
+        <p>
+            <b>description:</b>This web page aims to inform the reader about the spread of the COVID-19 virus without an opinion, just show what is happening around the world in a hopefully intuitive way. 
+        </p>
+        <p>
+            <b>data:</b>The page data is refreshed daily inline with the source data which can be found at <a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a> which has been organised by Johns Hopkins CSSE and
+            sources its data from goverment websites.
+        </p>
+        <p>
+            <b>code:</b>The source code for this website and data exploration of the dataset can be found at <a href="https://github.com/o-gent/ogent_covid19">github.com/o-gent/ogent_covid19</a>
+        </p>
+        <p>
+            <b>disclaimer ⚠: </b> This project has been done in my free time and you should cross reference with other data sources as I give no guarantee any of the information is correct, only 
+            that I have made my best effort ensure it is. Also I'm not a website designer and never intend to be 🤮
+        </p>
+    </div>
 
     <h2>
-        Select countries
+        Select countries / states
     </h2>
-    <form action="/" method="get">
+
+    <form action="/" method="get", style="max-width: 50%; text-align: left;">
         {% for country in countries %}
         <input type="checkbox" name="{{ country }}"">
         <label for"hello"> {{ country }}</label><br>
         {% endfor %}
         <input type="submit" value="Submit">
-      </form>
+    </form>
+
 
     <h3>Cumulative deaths by COVID-19</h3>
+
     {{ script_plot1|safe }}
     {{ div_plot1|safe }}
-    <p>
+    
+    <p style="text-align: left;">
         The plot shows percentage of the population vs days since deaths started in each country. This is useful as it tells us which country has been the most affected by the virus, 
     </p>
 
 
     <h3>
-        Title 2
+        Acceleration of deaths
     </h3>
 
-    <p>
-        Description for plot 2
+    <img src="/acceleration_deaths_plot.png{{ param }}" style="max-width: 800px;">
+
+    <p style="text-align: left;">
+        The increase of deaths reported per day over the last 7 days as a percentage of the countries population.
+        A positive acceleration means the number of deaths being reported per day is increasing - the situation is getting worse.
+        Countries that are recovering will have a negative acceleration.
+        Countries with a near 0 acceleration have stabilised the situation and should start to recover
     </p>
 
+    
+    <h3>
+        Acceleration of confirmed cases
+    </h3>
+
+    <img src="/acceleration_confirmed_plot.png{{ param }}" style="max-width: 800px;">
+
+    <p style="text-align: left;">
+        The increase of confirmed cases reported per day over the last 7 days as a percentage of the countries population.
+    </p>
+
+</div>
+
+<div>
+    <h3>
+        Planned features
+    </h3>
+    <ul style="list-style-type: none; max-width: 50%; text-align: left;">
+        <li>
+            ⬜ Predictions for when each country will peak
+        </li>
+        <li>
+            ⬜ Table of absolute figures
+        </li>
+        <li>
+            ⬜ Estimation of reproduction number for each country
+        </li>
+    </ul>
+</div>
+
+<div>
+    <h3>
+        Further reading
+    </h3>
+    <ul style="list-style-type:none;">
+        <li>
+            <a href="https://www.washingtonpost.com/graphics/2020/world/corona-simulator/">https://www.washingtonpost.com/graphics/2020/world/corona-simulator/</a>
+        </li>
+        <li>
+            <a href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6</a>
+        </li>
+        <li>
+            <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/">https://www.who.int/emergencies/diseases/novel-coronavirus-2019/situation-reports/</a>
+        </li>
+    </ul>
 </div>
 
 <div class="end">

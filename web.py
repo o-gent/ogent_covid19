@@ -10,7 +10,7 @@ from bokeh.embed import components
 from flask import Flask, render_template, request
 from flask.logging import default_handler
 
-from plot import deaths_since_start, COUNTRY_DATA
+import plot
 
 last_update = datetime.now().strftime("%B %d, %Y %H:%M")
 
@@ -49,31 +49,94 @@ def index():
     """
     # User input for countries
     countries = []
-    for country in COUNTRY_DATA.keys():
+    for country in plot.COUNTRY_DATA.keys():
         if request.args.get(country) == "on":
             countries.append(country)
-    
-    logging.info(f"selected {countries}")
-
     if countries == []:
         # pick some default countries
         countries = ["United Kingdom", "New York"]
 
 
     # generate plot 1
-    script_plot1, div_plot1 = components(deaths_since_start(countries))
-    
-    # generate plot 2
+    script_plot1, div_plot1 = components(plot.deaths_since_start(countries))
 
-    # generate plot 3
+    # generate the GET parameters for other plots
+    param = "?"
+    for country in countries:
+        param += country + "=on&"
+    param = param.replace(" ", "+")
 
     return render_template(
         "web.html", 
         script_plot1=script_plot1,  
         div_plot1=div_plot1,
         last_update=last_update,
-        countries = list(COUNTRY_DATA.keys())
+        countries = list(plot.COUNTRY_DATA.keys()),
+        param=param
     )
+
+# Matplotlib serving section
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import io
+from flask import Response
+
+
+@app.route('/acceleration_deaths_plot.png')
+def accelation_deaths():
+    """
+    Countries as GET paramters
+    """
+    # handle input
+    countries = []
+    for country in plot.COUNTRY_DATA.keys():
+        if request.args.get(country) == "on":
+            countries.append(country)
+    if countries == []:
+        # pick some default countries
+        countries = ["United Kingdom", "New York"]  
+
+    # get the figure
+    fig = plot.acceleration_deaths_plot(countries)
+    # output the figure as a response
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output, bbox_inches='tight')
+    return Response(output.getvalue(), mimetype='image/png')
+
+@app.route('/acceleration_confirmed_plot.png')
+def accelation_confirmed():
+    """
+    Countries as GET paramters
+    """
+    # handle input
+    countries = []
+    for country in plot.COUNTRY_DATA.keys():
+        if request.args.get(country) == "on":
+            countries.append(country)
+    if countries == []:
+        # pick some default countries
+        countries = ["United Kingdom", "New York"]  
+
+    # get the figure
+    fig = plot.acceleration_confirmed_plot(countries)
+    # output the figure as a response
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output, bbox_inches='tight')
+    return Response(output.getvalue(), mimetype='image/png')
+
+
+# app maintanance section
+@app.route('/update')
+def update():
+    """
+    update data sources on load
+    """
+    global last_update
+    global plot
+    last_update = datetime.now().strftime("%B %d, %Y %H:%M")
+    from importlib import reload 
+    reload(plot)
+    return "updated!"
+
 
 
 if __name__ == '__main__':

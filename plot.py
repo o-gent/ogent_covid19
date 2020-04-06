@@ -15,6 +15,10 @@ import pandas as pd
 from bokeh.palettes import Colorblind as palette
 from bokeh.plotting import figure, output_file, show
 import bokeh.models
+from bokeh.models import ColumnDataSource, FactorRange
+from matplotlib.figure import Figure
+import matplotlib
+matplotlib.use('Agg')
 
 BASE_DIRECTORY = "COVID-19\\csse_covid_19_data\\csse_covid_19_time_series\\"
 
@@ -212,3 +216,95 @@ def deaths_since_start(countries: List[str]):
     return fig
 
 
+def acceleration(country):
+    """
+    get the accelation of deaths and confimred cases for a country
+    """
+    # confirmed
+    df = COUNTRY_DATA[country]['data'].confirmed.diff()
+    df = df[df.index > (pd.Timestamp.now() - pd.Timedelta(days=8))]
+    bestfit = np.polyfit(x=range(7), y=df.values, deg=1)
+    confirmed_gradient = bestfit[0] / COUNTRY_DATA[country]['population']
+    
+    # deaths
+    df = COUNTRY_DATA[country]['data'].deaths.diff()
+    df = df[df.index > (pd.Timestamp.now() - pd.Timedelta(days=8))]
+    bestfit = np.polyfit(x=range(7), y=df.values, deg=1)
+    deaths_gradient = bestfit[0] / COUNTRY_DATA[country]['population']
+    
+    return confirmed_gradient, deaths_gradient
+
+
+def sum(country):
+    """
+    get the total number of confirmed / deaths for each country
+    """
+    return COUNTRY_DATA[country]['data'].confirmed.sum(), COUNTRY_DATA[country]['data'].deaths.sum()
+
+
+def acceleration_deaths_plot(countries: List[str]):
+    # make bar charts with accerlation/sum for confirmed/deaths for each country
+    # do with matplotlib as bokeh is being a bitch
+    # stacked example
+
+    deaths_accel = [acceleration(country)[1] for country in countries]
+
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+
+    # set width of bar
+    barWidth = 0.8
+    
+    # Set position of bar on X axis
+    r1 = np.arange(len(deaths_accel))
+    
+    # Make the plot
+    axis.bar(r1, deaths_accel, color='#8f0000', width=barWidth, edgecolor='white', label='confirmed cases')
+    
+    # Add xticks on the middle of the group bars
+    axis.set_xlabel('Country/State', fontweight='bold')
+    axis.set_ylabel("acceleration of deaths (% of population)")
+    axis.set_xticks(np.arange(len(countries)))
+    axis.set_xticklabels(countries)
+    #axis.set_xticks(rotation=90)
+    axis.axhline(0, color='black')
+    minimum = lambda x: min(x)*1.3 if min(x) < 0 else 0
+    maximum = lambda x: max(x)*1.3 if max(x) > 0 else 0
+    axis.set_ylim(bottom=minimum(deaths_accel)*1.3, top=maximum(deaths_accel) * 1.3)
+
+    fig.set_size_inches(10,6)
+
+    return fig
+
+
+def acceleration_confirmed_plot(countries: List[str]):
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+
+    # set width of bar
+    barWidth = 0.8
+    
+    # set height of bar
+    confirmed_accel = [acceleration(country)[0] for country in countries]
+    
+    # Set position of bar on X axis
+    r1 = np.arange(len(confirmed_accel))
+    
+    # Make the plot
+    axis.bar(r1, confirmed_accel, color='#537599', width=barWidth, edgecolor='white', label='confirmed cases')
+    
+    # Add xticks on the middle of the group bars
+    axis.set_xlabel('Country/State', fontweight='bold')
+    axis.set_ylabel("acceleration of confirmed cases (% of population)")
+    axis.set_xticks(np.arange(len(countries)))
+    axis.set_xticklabels(countries)
+    #axis.set_xticks(rotation=90)
+    axis.axhline(0, color='black')
+
+    minimum = lambda x: min(x)*1.3 if min(x) < 0 else 0
+    maximum = lambda x: max(x)*1.3 if max(x) > 0 else 0
+    axis.set_ylim(bottom=minimum(confirmed_accel)*1.3, top=maximum(confirmed_accel) * 1.3)
+
+    fig.set_size_inches(10,6)
+
+    return fig
