@@ -77,7 +77,7 @@ def index():
         script_plot1=script_plot1,  
         div_plot1=div_plot1,
         last_update=last_update,
-        countries = list(plot.COUNTRY_DATA.keys()),
+        countries = sorted(list(plot.COUNTRY_DATA.keys())),
         param=param
     )
 
