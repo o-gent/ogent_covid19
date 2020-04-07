@@ -72,7 +72,7 @@ def index():
 
     # Render desktop version or mobile version
     # Not ideal but necessary due to matplotlib and bokeh limitations
-    mobile = ["android", "iPhone"]
+    mobile = ["android", "iphone"]
     if request.user_agent.platform in mobile:
         
 
