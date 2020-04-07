@@ -4,12 +4,8 @@
 <meta charset="UTF-8">
 <meta name="description" content="COVID-19 Data central">
 <meta name="keywords" content="Covid, Covid19, virus, data, data analysis">
-<meta name="author" content="Oliver Gent">
+<meta name="author" content="o-gent">
 <meta name="viewport" content="maximum-scale=1">
-
-<link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.css" type="text/css" />
-<link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.0.1.min.css" type="text/css" />
-<link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.0.1.min.css" type="text/css">
 
 <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"></script>
 <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-api-2.0.1.min.js"></script>
@@ -143,8 +139,12 @@ footer{
 
     <h3>Cumulative deaths by COVID-19</h3>
 
-    {{ script_plot1|safe }}
-    {{ div_plot1|safe }}
+    {% if mobile %}
+        <img src="/deaths_since_start_mobile.png{{ param }}" style="max-width: 800px;">
+    {% else %}
+        {{ script_plot1|safe }}
+        {{ div_plot1|safe }}
+    {% endif %}
     
     <p style="text-align: left;">
         Using days since the spread started (when deaths pass 0.0001% of the population) and number of deaths as a percentage of the population allows the state of virus spread between different countries. The target is a horizontal line - which means there are no new deaths. China is the best example of a country which shows a full recovery, The legitimacy of their data reporting is questionable however..
@@ -154,8 +154,12 @@ footer{
     <h3>
         Acceleration of deaths
     </h3>
-
-    <img src="/acceleration_deaths_plot.png{{ param }}" style="max-width: 800px;">
+    
+    {% if mobile %}
+        <img src="/acceleration_deaths_plot_mobile.png{{ param }}" style="max-width: 800px;">
+    {% else %}
+        <img src="/acceleration_deaths_plot.png{{ param }}" style="max-width: 800px;">
+    {% endif %}
 
     <p style="text-align: left;">
         The increase of deaths reported per day over the last 7 days as a percentage of the countries population.
@@ -170,7 +174,11 @@ footer{
         Acceleration of confirmed cases
     </h3>
 
-    <img src="/acceleration_confirmed_plot.png{{ param }}" style="max-width: 800px;">
+    {% if mobile %}
+        <img src="/acceleration_confirmed_plot_mobile.png{{ param }}" style="max-width: 800px;">
+    {% else %}
+        <img src="/acceleration_confirmed_plot.png{{ param }}" style="max-width: 800px;">
+    {% endif %}
 
     <p style="text-align: left;">
         The increase of confirmed cases reported per day over the last 7 days as a percentage of the countries population. Confirmed cases isn't a relaible way of comparing countries as every country has different test coverage, it could however give an indication of the virus spread slowing down.
@@ -220,14 +228,9 @@ footer{
 
 </div>
 
-<div class="end">
-    <i>fin</i>
-</div>
-
 </body>
 
 <footer>
-    Oliver Gent
 </footer>
 
 </html>

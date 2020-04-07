@@ -1,23 +1,28 @@
 # get new data from github repository https://github.com/CSSEGISandData/COVID-19
+import platform
 import subprocess
-process = subprocess.Popen("cd COVID-19 & git fetch & git pull", stdout=subprocess.PIPE, shell=True)
-print(process.communicate()[0].strip().decode())
-
-
+from functools import lru_cache
 # imports and globals
 from itertools import cycle
 from os.path import join
 from typing import List
 
+import bokeh.models
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from bokeh.palettes import Colorblind as palette
-from bokeh.plotting import figure, output_file, show
-import bokeh.models
-from bokeh.models import ColumnDataSource, FactorRange
+from bokeh.plotting import figure, output_file, show, ColumnDataSource
 from matplotlib.figure import Figure
-import matplotlib
+
+if platform.system() == "Windows":
+    process = subprocess.Popen("cd COVID-19 & git fetch & git pull", stdout=subprocess.PIPE, shell=True)
+if platform.system() == "Linux":
+    process = subprocess.Popen("cd COVID-19 ; git fetch ; git pull", stdout=subprocess.PIPE, shell=True)
+print(process.communicate()[0].strip().decode())
+
+
 matplotlib.use('Agg')
 
 BASE_DIRECTORY = "COVID-19/csse_covid_19_data/csse_covid_19_time_series"
@@ -211,16 +216,55 @@ def deaths_since_start(countries: List[str]):
     # add the hover tool and configure it to be useful
     fig.add_tools(bokeh.models.HoverTool())
     hover = fig.select(dict(type=bokeh.models.HoverTool))
-    hover.tooltips = [("Country", "@series_name"), ("Day", "@x"),  ("Value", "@y"),]
+    hover.tooltips = [("Country", "@name"), ("Day", "@x"),  ("Value", "@y"),]
     hover.mode = 'mouse'
 
     for country in countries:
+        # convert to days since start 
         series = convert_index(COUNTRY_DATA[country]['normalised_data']).deaths
-        fig.line(series.index, series.values, legend_label=country, line_width=2, color=next(colours))
+        label = country + " " + COUNTRY_DATA[country]['province']
+        # create a bokeh data source
+        source = ColumnDataSource({
+            'x' : series.index,
+            'y' : series.values,
+            'name' : [label for x in series.index],
+        })
+
+        fig.line(
+            'x', 
+            'y', 
+            source=source,
+            legend_label=country, 
+            line_width=2, 
+            color=next(colours)
+        )
 
     return fig
 
 
+def deaths_since_start_mobile(countries: List[str]):
+    """
+    Matplotlib version of bokeh plot
+    """
+    fig = Figure(figsize=(10,6))
+    ax = fig.add_subplot(1, 1, 1)
+
+    for country in countries:
+        ax.plot(convert_index(COUNTRY_DATA[country]['normalised_data']).deaths)
+    
+    ax.legend([country + " " + COUNTRY_DATA[country]['province'] for country in countries])
+    ax.set_xlim([0, 40])
+    ax.set_xlabel("Days since spread started in each country")
+    ax.set_ylabel("Percentage of the population")
+
+    # set the font size
+    for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
+        item.set_fontsize(18)
+
+    return fig
+
+
+@lru_cache()
 def acceleration(country):
     """
     get the accelation of deaths and confimred cases for a country
@@ -251,7 +295,6 @@ def acceleration_deaths_plot(countries: List[str]):
     # make bar charts with accerlation/sum for confirmed/deaths for each country
     # do with matplotlib as bokeh is being a bitch
     # stacked example
-
     deaths_accel = [acceleration(country)[1] for country in countries]
 
     fig = Figure()
@@ -280,7 +323,6 @@ def acceleration_deaths_plot(countries: List[str]):
     fig.set_size_inches(10,6)
 
     return fig
-
 
 def acceleration_confirmed_plot(countries: List[str]):
     fig = Figure()

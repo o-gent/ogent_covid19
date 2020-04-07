@@ -2,13 +2,15 @@
 Flask server to display live(ish) data report
 """
 
+import io
 # imports and globals
 import logging
 from datetime import datetime
 
 from bokeh.embed import components
-from flask import Flask, render_template, request
+from flask import Flask, Response, render_template, request
 from flask.logging import default_handler
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
 import plot
 
@@ -51,7 +53,8 @@ def index():
     Main report page
     Graphs are rendered each time the page is loaded
     """
-    logging.info(f"{datetime.now():%Y-%m-%d %H:%M:%S%z} | {request.remote_addr} | {request.url}")
+
+    logging.info(f"{datetime.now():%Y-%m-%d %H:%M:%S%z} | {request.remote_addr} | {request.url} | {request.user_agent.platform}")
 
     # User input for countries
     countries = []
@@ -59,33 +62,45 @@ def index():
         if request.args.get(country) == "on":
             countries.append(country)
     if countries == []:
-        # pick some default countries
-        countries = ["United Kingdom", "New York"]
-
-
-    # generate plot 1
-    script_plot1, div_plot1 = components(plot.deaths_since_start(countries))
-
+        countries = ["United Kingdom", "France", "Germany", "Spain"] # pick some default countries
+    
     # generate the GET parameters for other plots
     param = "?"
     for country in countries:
         param += country + "=on&"
     param = param.replace(" ", "+")
 
-    return render_template(
-        "web.html", 
-        script_plot1=script_plot1,  
-        div_plot1=div_plot1,
-        last_update=last_update,
-        countries = sorted(list(plot.COUNTRY_DATA.keys())),
-        param=param
-    )
+    # Render desktop version or mobile version
+    # Not ideal but necessary due to matplotlib and bokeh limitations
+    mobile = ["android", "iPhone"]
+    if request.user_agent.platform in mobile:
+        
+
+        return render_template(
+            "web.html",
+            mobile=True,
+            script_plot1="",
+            div_plot1="",
+            last_update=last_update,
+            countries=sorted(list(plot.COUNTRY_DATA.keys())),
+            param=param
+        )
+
+    else:
+        # generate plot 1
+        script_plot1, div_plot1 = components(plot.deaths_since_start(countries))
+
+        return render_template(
+            "web.html", 
+            script_plot1=script_plot1,  
+            div_plot1=div_plot1,
+            last_update=last_update,
+            countries = sorted(list(plot.COUNTRY_DATA.keys())),
+            param=param
+        )
+
 
 # Matplotlib serving section
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import io
-from flask import Response
-
 
 @app.route('/acceleration_deaths_plot.png')
 def accelation_deaths():
@@ -108,6 +123,36 @@ def accelation_deaths():
     FigureCanvas(fig).print_png(output, bbox_inches='tight')
     return Response(output.getvalue(), mimetype='image/png')
 
+
+@app.route('/acceleration_deaths_plot_mobile.png')
+def accelation_deaths_mobile():
+    """
+    MOBILE VERSION
+    Countries as GET paramters
+    """
+    # handle input
+    countries = []
+    for country in plot.COUNTRY_DATA.keys():
+        if request.args.get(country) == "on":
+            countries.append(country)
+    if countries == []:
+        # pick some default countries
+        countries = ["United Kingdom", "New York"]  
+
+    # get the figure
+    fig = plot.acceleration_deaths_plot(countries)
+
+    # increase font size
+    ax = fig.axes[0]
+    for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
+        item.set_fontsize(18)
+    
+    # output the figure as a response
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output, bbox_inches='tight')
+    return Response(output.getvalue(), mimetype='image/png')
+
+
 @app.route('/acceleration_confirmed_plot.png')
 def accelation_confirmed():
     """
@@ -129,6 +174,55 @@ def accelation_confirmed():
     FigureCanvas(fig).print_png(output, bbox_inches='tight')
     return Response(output.getvalue(), mimetype='image/png')
 
+
+@app.route('/acceleration_confirmed_plot_mobile.png')
+def accelation_confirmed_mobile():
+    """
+    MOBILE VERSION
+    Countries as GET paramters
+    """
+    # handle input
+    countries = []
+    for country in plot.COUNTRY_DATA.keys():
+        if request.args.get(country) == "on":
+            countries.append(country)
+    if countries == []:
+        # pick some default countries
+        countries = ["United Kingdom", "New York"]  
+
+    # get the figure
+    fig = plot.acceleration_confirmed_plot(countries)
+    # increase font size
+    ax = fig.axes[0]
+    for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
+        item.set_fontsize(18)
+    # output the figure as a response
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output, bbox_inches='tight')
+    return Response(output.getvalue(), mimetype='image/png')
+
+
+@app.route('/deaths_since_start_mobile.png')
+def deaths_since_start_mobile():
+    """
+    MOBILE VERSION
+    Countries as GET paramters
+    """
+    # handle input
+    countries = []
+    for country in plot.COUNTRY_DATA.keys():
+        if request.args.get(country) == "on":
+            countries.append(country)
+    if countries == []:
+        # pick some default countries
+        countries = ["United Kingdom", "New York"]  
+
+    # get the figure
+    fig = plot.deaths_since_start_mobile(countries)
+    # output the figure as a response
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output, bbox_inches='tight')
+    return Response(output.getvalue(), mimetype='image/png')
 
 # app maintanance section
 @app.route('/update')
