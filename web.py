@@ -58,9 +58,12 @@ def index():
 
     # User input for countries
     countries = []
-    for country in plot.COUNTRY_DATA.keys():
-        if request.args.get(country) == "on":
-            countries.append(country)
+    if request.args.get("all") == "on":
+        countries = plot.COUNTRY_DATA.keys()
+    else:
+        for country in plot.COUNTRY_DATA.keys():
+            if request.args.get(country) == "on":
+                countries.append(country)
     if countries == []:
         countries = ["United Kingdom", "France", "Germany", "Spain"] # pick some default countries
     
@@ -69,6 +72,8 @@ def index():
     for country in countries:
         param += country + "=on&"
     param = param.replace(" ", "+")
+
+    summary_table = plot.summary_table(countries)
 
     # Render desktop version or mobile version
     # Not ideal but necessary due to matplotlib and bokeh limitations
@@ -82,8 +87,9 @@ def index():
             script_plot1="",
             div_plot1="",
             last_update=last_update,
-            countries=sorted(list(plot.COUNTRY_DATA.keys())),
-            param=param
+            countries=["all"] + sorted(list(plot.COUNTRY_DATA.keys())),
+            param=param,
+            table=summary_table
         )
 
     else:
@@ -95,8 +101,9 @@ def index():
             script_plot1=script_plot1,  
             div_plot1=div_plot1,
             last_update=last_update,
-            countries = sorted(list(plot.COUNTRY_DATA.keys())),
-            param=param
+            countries = ["all"] + sorted(list(plot.COUNTRY_DATA.keys())),
+            param=param,
+            table=summary_table
         )
 
 
@@ -223,6 +230,7 @@ def deaths_since_start_mobile():
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output, bbox_inches='tight')
     return Response(output.getvalue(), mimetype='image/png')
+
 
 # app maintanance section
 @app.route('/update')

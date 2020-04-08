@@ -272,19 +272,19 @@ def acceleration(country):
     # confirmed
     df = COUNTRY_DATA[country]['data'].confirmed.diff()
     df = df[df.index > (pd.Timestamp.now() - pd.Timedelta(days=8))]
-    bestfit = np.polyfit(x=range(7), y=df.values, deg=1)
+    bestfit = np.polyfit(x=range(len(df.values)), y=df.values, deg=1)
     confirmed_gradient = bestfit[0] / COUNTRY_DATA[country]['population']
     
     # deaths
     df = COUNTRY_DATA[country]['data'].deaths.diff()
     df = df[df.index > (pd.Timestamp.now() - pd.Timedelta(days=8))]
-    bestfit = np.polyfit(x=range(7), y=df.values, deg=1)
+    bestfit = np.polyfit(x=range(len(df.values)), y=df.values, deg=1)
     deaths_gradient = bestfit[0] / COUNTRY_DATA[country]['population']
     
     return confirmed_gradient, deaths_gradient
 
 
-def sum(country):
+def summary(country):
     """
     get the total number of confirmed / deaths for each country
     """
@@ -355,3 +355,38 @@ def acceleration_confirmed_plot(countries: List[str]):
     fig.set_size_inches(10,6)
 
     return fig
+
+
+def summary_table(countries: List[str]):
+    """
+    Total confirmed, total deaths, acceleration absolute
+    """
+    
+    df_list = []
+    
+    # add headers
+    df_list.append(
+        [
+            "Country",
+            "Confirmed cases",
+            "Confirmed acceleration",
+            "Deaths",
+            "Deaths acceleration"
+        ]
+    )
+    
+    for country in countries:
+        acceleration_figures = acceleration(country)
+        pop = COUNTRY_DATA[country]['population']
+        df_list.append(
+            [
+                country,
+                COUNTRY_DATA[country]['data'].confirmed[-1],
+                int(acceleration_figures[0] * pop),
+                COUNTRY_DATA[country]['data'].deaths[-1],
+                int(acceleration_figures[1] * pop),
+            ]
+        )
+
+    return df_list
+

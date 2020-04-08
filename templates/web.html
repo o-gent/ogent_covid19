@@ -98,7 +98,7 @@ footer{
         <div style="text-align: left;">
 
             <p>
-                <b>description:</b>This web page aims to inform the reader about the spread of the COVID-19 virus without an opinion, just show what is happening around the world in a hopefully intuitive way. 
+                <b>description:</b>This web page aims to inform the reader about the spread of the COVID-19 virus.
             </p>
             
             <p>
@@ -119,7 +119,7 @@ footer{
     </div>
 
     <h2>
-        Select countries / states
+        ❗ Select countries / states to compare ❗
     </h2>
 
     <form action="/" method="get">
@@ -184,6 +184,21 @@ footer{
         The increase of confirmed cases reported per day over the last 7 days as a percentage of the countries population. Confirmed cases isn't a relaible way of comparing countries as every country has different test coverage, it could however give an indication of the virus spread slowing down.
     </p>
 
+    <h3>
+        Summary tables
+    </h3>
+
+    <table style="width:100%">
+        {% for row in table %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 
     <h3>
         Planned features 🔜
@@ -194,7 +209,7 @@ footer{
             ⬜ Predictions for when each country will peak
         </li>
         <li>
-            ⬜ Table of absolute figures
+            ✔ Table of absolute figures
         </li>
         <li>
             ⬜ Estimation of reproduction number for each country
