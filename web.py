@@ -125,6 +125,7 @@ def accelation_deaths():
 
     # get the figure
     fig = plot.acceleration_deaths_plot(countries)
+
     # output the figure as a response
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output, bbox_inches='tight')
@@ -176,6 +177,7 @@ def accelation_confirmed():
 
     # get the figure
     fig = plot.acceleration_confirmed_plot(countries)
+    
     # output the figure as a response
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output, bbox_inches='tight')
@@ -199,6 +201,7 @@ def accelation_confirmed_mobile():
 
     # get the figure
     fig = plot.acceleration_confirmed_plot(countries)
+    
     # increase font size
     ax = fig.axes[0]
     for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
@@ -226,6 +229,10 @@ def deaths_since_start_mobile():
 
     # get the figure
     fig = plot.deaths_since_start_mobile(countries)
+
+    # make room for labels
+    fig.subplots_adjust(bottom=0.15)
+
     # output the figure as a response
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output, bbox_inches='tight')

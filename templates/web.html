@@ -42,6 +42,18 @@ div.form{
     -moz-columns: 2;
 }
 
+{% if mobile %}
+
+label.country{
+    font-size: x-large;
+}
+
+input{
+    font-size: x-large;
+}
+
+{% endif %}
+
 label{
     background-color: #a3c2ff;
     border: none;
@@ -90,28 +102,11 @@ footer{
     </p>
 
     <div class="section">
-        
-        <h2> 
-            <i>info</i> 
-        </h2>
 
         <div style="text-align: left;">
 
             <p>
-                <b>description:</b>This web page aims to inform the reader about the spread of the COVID-19 virus.
-            </p>
-            
-            <p>
-                <b>data:</b>The page data is refreshed daily inline with the source data which can be found at <a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a> which has been organised by Johns Hopkins CSSE and sources its data from goverment websites. The population figures are taken from google search, usually they are a couple of years out of date but the discrepancy is assumed negligible.
-            </p>
-            
-            <p>
-                <b>code:</b>The source code for this website and data exploration of the dataset can be found at <a href="https://github.com/o-gent/ogent_covid19">github.com/o-gent/ogent_covid19</a>.
-            </p>
-            
-            <p>
-                <b>disclaimer ⚠: </b> This project has been done in my free time and you should cross reference with other data sources as I give no guarantee any of the information is correct, only 
-                that I have made my best effort ensure it is. Browser/Mobile support is also questionable. 
+                <b>description: </b> This is a project I've thrown together to give live comparisons between countries COVID-19 virus spread progression. Select countries below to compare them!
             </p>
 
         </div>
@@ -126,7 +121,7 @@ footer{
         <div class="form">
             {% for country in countries %}
                 <div>
-                    <label>
+                    <label class="country">
                         <input type="checkbox" name="{{ country }}"">
                         {{ country }}
                     </label>
@@ -147,7 +142,11 @@ footer{
     {% endif %}
     
     <p style="text-align: left;">
-        Using days since the spread started (when deaths pass 0.0001% of the population) and number of deaths as a percentage of the population allows the state of virus spread between different countries. The target is a horizontal line - which means there are no new deaths. China is the best example of a country which shows a full recovery, The legitimacy of their data reporting is questionable however..
+        To allow comparison of how the virus has spread between different countries, this graph compares countries using days since the spread started (when deaths pass 0.0001% of the population) and the number of deaths as a percentage of the population.
+    </p>
+
+    <p style="text-align: left;">
+        The target is a horizontal line - which means there are no new deaths. China is the best example of a country which shows a full recovery, the legitimacy of their data reporting is questionable however..
     </p>
 
 
@@ -162,11 +161,12 @@ footer{
     {% endif %}
 
     <p style="text-align: left;">
-        The increase of deaths reported per day over the last 7 days as a percentage of the countries population.
-        A positive acceleration means the number of deaths being reported per day is increasing - the situation is getting worse.
-        Countries that are recovering will have a negative acceleration.
-        Countries with a near 0 acceleration have stabilised the situation and should start to recover.
-        Some countries have different policies for what counts as a death by covid-19, for example until recently France only counted covid-19 deaths which occured in hospitals. This would distort that countries data compared to countries which included deaths from home too. 
+        This graph shows the increase of deaths reported per day over the last 7 days as a percentage of the countries population.
+        A positive acceleration means the number of deaths being reported per day is increasing - the situation is getting worse; countries that are recovering will have a negative acceleration. Therefore, countries with a near 0 acceleration have stabilised the situation and should start to recover. 
+    </p>
+    
+    <p style="text-align: left;">
+        However, some countries have different policies for what counts as a death by covid-19, for example until recently France only counted covid-19 deaths which occured in hospitals which would distort that countries data compared to countries which included deaths from home too. 
     </p>
 
 
@@ -181,7 +181,7 @@ footer{
     {% endif %}
 
     <p style="text-align: left;">
-        The increase of confirmed cases reported per day over the last 7 days as a percentage of the countries population. Confirmed cases isn't a relaible way of comparing countries as every country has different test coverage, it could however give an indication of the virus spread slowing down.
+        This graph shows the increase of confirmed cases reported per day over the last 7 days as a percentage of the countries population. However, confirmed cases isn't a relaible way of comparing countries as every country has different test coverage, although it could give an indication of the virus spread slowing down.
     </p>
 
     <h3>
@@ -199,6 +199,27 @@ footer{
             </tr>
         {% endfor %}
     </table>
+
+    <h2> 
+        <i>info</i> 
+    </h2>
+
+    <div style="text-align: left;">
+
+        <p>
+            <b>data: </b>The page data is refreshed daily inline with the source data which can be found at <a href="https://github.com/CSSEGISandData/COVID-19">github.com/CSSEGISandData/COVID-19</a> which has been organised by Johns Hopkins CSSE and sources its data from goverment websites.
+        </p>
+
+        <p>
+            <b>code: </b>The source code for this website and data exploration of the dataset can be found at <a href="https://github.com/o-gent/ogent_covid19">github.com/o-gent/ogent_covid19</a>.
+        </p>
+        
+        <p>
+            <b>disclaimer ⚠: </b> This project has been done in my free time and you should cross reference with other data sources as I give no guarantee any of the information is correct, only that I have made my best effort ensure it is. Browser/Mobile support is also questionable. 
+        </p>
+    
+    </div>
+
 
     <h3>
         Planned features 🔜

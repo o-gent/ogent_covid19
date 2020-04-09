@@ -76,6 +76,22 @@ COUNTRY_DATA = {
         "population": 8623000, #2017
         "province": "",
     },
+    "India": {
+        "population": 1339000000, #2017
+        "province": "",
+    },
+    "Mexico": {
+        "population": 129200000, #2017
+        "province": "",
+    },
+    "Iran": {
+        "population": 81160000, #2017
+        "province": "",
+    },
+    "Netherlands": {
+        "population": 17280000, #2019
+        "province": "",
+    }
 }
 
 
@@ -284,13 +300,6 @@ def acceleration(country):
     return confirmed_gradient, deaths_gradient
 
 
-def summary(country):
-    """
-    get the total number of confirmed / deaths for each country
-    """
-    return COUNTRY_DATA[country]['data'].confirmed.sum(), COUNTRY_DATA[country]['data'].deaths.sum()
-
-
 def acceleration_deaths_plot(countries: List[str]):
     # make bar charts with accerlation/sum for confirmed/deaths for each country
     # do with matplotlib as bokeh is being a bitch
@@ -314,13 +323,14 @@ def acceleration_deaths_plot(countries: List[str]):
     axis.set_ylabel("acceleration of deaths (% of population)")
     axis.set_xticks(np.arange(len(countries)))
     axis.set_xticklabels(countries)
-    #axis.set_xticks(rotation=90)
     axis.axhline(0, color='black')
     minimum = lambda x: min(x)*1.3 if min(x) < 0 else 0
     maximum = lambda x: max(x)*1.3 if max(x) > 0 else 0
     axis.set_ylim(bottom=minimum(deaths_accel)*1.3, top=maximum(deaths_accel) * 1.3)
 
-    fig.set_size_inches(10,6)
+    fig.set_size_inches(10,7)
+
+    fig.tight_layout()
 
     return fig
 
@@ -352,7 +362,7 @@ def acceleration_confirmed_plot(countries: List[str]):
     maximum = lambda x: max(x)*1.3 if max(x) > 0 else 0
     axis.set_ylim(bottom=minimum(confirmed_accel)*1.3, top=maximum(confirmed_accel) * 1.3)
 
-    fig.set_size_inches(10,6)
+    fig.set_size_inches(10,7)
 
     return fig
 
