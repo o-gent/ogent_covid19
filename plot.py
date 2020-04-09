@@ -305,6 +305,11 @@ def acceleration_deaths_plot(countries: List[str]):
     # do with matplotlib as bokeh is being a bitch
     # stacked example
     deaths_accel = [acceleration(country)[1] for country in countries]
+    
+    # sort in acceleration order
+    sorted_countries = [x for _,x in sorted(zip(deaths_accel, countries), reverse=True)]
+    countries = sorted_countries
+    deaths_accel = sorted(deaths_accel, reverse=True)
 
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
@@ -333,6 +338,7 @@ def acceleration_deaths_plot(countries: List[str]):
     fig.tight_layout()
 
     return fig
+
 
 def acceleration_confirmed_plot(countries: List[str]):
     fig = Figure()
@@ -399,4 +405,3 @@ def summary_table(countries: List[str]):
         )
 
     return df_list
-

@@ -95,11 +95,15 @@ footer{
 <body>
 
 <div class="main">
-    <H1 style="padding: 1em;"> Covid-19 data central </H1>
+
+    <H1 style="padding: 1em;"> 
+        Covid-19 data central 
+    </H1>
 
     <p>
         last update: {{ last_update }}
     </p>
+
 
     <div class="section">
 
@@ -113,9 +117,10 @@ footer{
 
     </div>
 
-    <h2>
+
+    <h3>
         ❗ Select countries / states ❗
-    </h2>
+    </h3>
 
     <form action="/" method="get">
         <div class="form">
@@ -132,7 +137,9 @@ footer{
     </form>
 
 
-    <h3>Cumulative deaths by COVID-19</h3>
+    <h3>
+        Cumulative deaths by COVID-19
+    </h3>
 
     {% if mobile %}
         <img src="/deaths_since_start_mobile.png{{ param }}" style="max-width: 800px;">
@@ -184,11 +191,12 @@ footer{
         This graph shows the increase of confirmed cases reported per day over the last 7 days as a percentage of the countries population. However, confirmed cases isn't a relaible way of comparing countries as every country has different test coverage, although it could give an indication of the virus spread slowing down.
     </p>
 
+
     <h3>
         Summary tables
     </h3>
 
-    <table style="width:100%">
+    <table style="width:100%; border: 1px solid grey;">
         {% for row in table %}
             <tr>
                 <td>{{ row[0] }}</td>

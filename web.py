@@ -58,7 +58,7 @@ def index():
 
     # User input for countries
     countries = []
-    if request.args.get("all") == "on":
+    if request.args.get("All") == "on":
         countries = plot.COUNTRY_DATA.keys()
     else:
         for country in plot.COUNTRY_DATA.keys():
@@ -87,7 +87,7 @@ def index():
             script_plot1="",
             div_plot1="",
             last_update=last_update,
-            countries=["all"] + sorted(list(plot.COUNTRY_DATA.keys())),
+            countries=["All"] + sorted(list(plot.COUNTRY_DATA.keys())),
             param=param,
             table=summary_table
         )
@@ -101,7 +101,7 @@ def index():
             script_plot1=script_plot1,  
             div_plot1=div_plot1,
             last_update=last_update,
-            countries = ["all"] + sorted(list(plot.COUNTRY_DATA.keys())),
+            countries = ["All"] + sorted(list(plot.COUNTRY_DATA.keys())),
             param=param,
             table=summary_table
         )
