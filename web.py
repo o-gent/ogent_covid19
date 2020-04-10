@@ -46,6 +46,13 @@ root = logging.getLogger()
 root.addHandler(default_handler)
 
 
+@app.after_request
+def after_request(response):
+    # log usage data
+    logging.info(f"{datetime.now():%Y-%m-%d %H:%M:%S%z} | {request.remote_addr} | {request.url} | {request.user_agent.platform}")
+    return response
+
+
 # begin app code
 @app.route('/')
 def index():
@@ -53,8 +60,6 @@ def index():
     Main report page
     Graphs are rendered each time the page is loaded
     """
-
-    logging.info(f"{datetime.now():%Y-%m-%d %H:%M:%S%z} | {request.remote_addr} | {request.url} | {request.user_agent.platform}")
 
     # User input for countries
     countries = []

@@ -335,8 +335,6 @@ def acceleration_deaths_plot(countries: List[str]):
 
     fig.set_size_inches(10,7)
 
-    fig.tight_layout()
-
     return fig
 
 
