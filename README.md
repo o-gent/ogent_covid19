@@ -14,16 +14,14 @@ Same dataset:
 
 ## What's next
 
-- Do some more interesting ways of interacting with the data
-
-- get US data
+-[X] get US data
 
 - More ways to display the data, comparisons with other things
 
 - Preidictions of death rates
 
-- web server to host report
+-[X] web server to host report
 
 ## graph ideas
 
-- confirmed cases, deaths, rank of acceleration -> like uni ranks
+-[X] confirmed cases, deaths, rank of acceleration -> like uni ranks
