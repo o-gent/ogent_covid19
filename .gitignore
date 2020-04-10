@@ -2,3 +2,4 @@ __pycache__
 app_log.log
 config.py
 .vscode/settings.json
+.ipynb_checkpoints/main-checkpoint.ipynb
