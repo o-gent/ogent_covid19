@@ -253,7 +253,7 @@ def update():
     global last_update
     global plot
     last_update = datetime.now().strftime("%B %d, %Y %H:%M")
-    from importlib import reload 
+    from importlib import reload
     reload(plot)
     return "updated!"
 
