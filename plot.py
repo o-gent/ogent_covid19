@@ -347,6 +347,11 @@ def acceleration_confirmed_plot(countries: List[str]):
     
     # set height of bar
     confirmed_accel = [acceleration(country)[0] for country in countries]
+
+    # sort in acceleration order
+    sorted_countries = [x for _,x in sorted(zip(confirmed_accel, countries), reverse=True)]
+    countries = sorted_countries
+    confirmed_accel = sorted(confirmed_accel, reverse=True)
     
     # Set position of bar on X axis
     r1 = np.arange(len(confirmed_accel))

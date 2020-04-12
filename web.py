@@ -6,9 +6,10 @@ import io
 # imports and globals
 import logging
 from datetime import datetime
+import time
 
 from bokeh.embed import components
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, render_template, request, redirect
 from flask.logging import default_handler
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
@@ -50,6 +51,21 @@ root.addHandler(default_handler)
 def after_request(response):
     # log usage data
     logging.info(f"{datetime.now():%Y-%m-%d %H:%M:%S%z} | {request.remote_addr} | {request.url} | {request.user_agent.platform}")
+
+    # lets troll
+    if request.url.startswith("http://146.148.32.5"):
+        time.sleep(10)
+        logging.info("redirecting an IP URL")
+        return redirect("http://90.207.238.183")
+    # for some reason we get a bunch of these
+    elif request.url == "http://covid-19/":
+        time.sleep(60)
+    # just capture all cases too
+    elif not request.url.startswith("http://ogent.uk"):
+        time.sleep(10)
+        logging.info("redirecting a non o-gent url")
+        return redirect("http://www.google.com")
+    
     return response
 
 
