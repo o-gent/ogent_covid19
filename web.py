@@ -9,7 +9,7 @@ from datetime import datetime
 import time
 
 from bokeh.embed import components
-from flask import Flask, Response, render_template, request, redirect
+from flask import Flask, Response, render_template, request, redirect, abort
 from flask.logging import default_handler
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 
@@ -45,6 +45,12 @@ logging.FileHandler('app_log.log', mode='a')
 
 root = logging.getLogger()
 root.addHandler(default_handler)
+
+BANNED = ["118.172.154.178"]
+@app.before_request
+def block():
+    if request.remote_addr in BANNED:
+        abort(403)
 
 
 @app.after_request
