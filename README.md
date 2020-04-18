@@ -1,8 +1,14 @@
 # ogent COVID-19 data exploration
 
-Yet another data expoloration of covid-19
+A website, built in Flask:
 
-oh and it's a website, built in Flask.
+(Yet another data expoloration of covid-19)
+
+---
+
+![alt text](/assets/ogent.png)
+
+--- 
 
 ## Datasets
 
@@ -14,14 +20,14 @@ Same dataset:
 
 ## What's next
 
--[X] get US data
+- [X] get US data
 
 - More ways to display the data, comparisons with other things
 
 - Preidictions of death rates
 
--[X] web server to host report
+- [X] web server to host report
 
 ## graph ideas
 
--[X] confirmed cases, deaths, rank of acceleration -> like uni ranks
+- [X] confirmed cases, deaths, rank of acceleration -> like uni ranks
