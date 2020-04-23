@@ -67,7 +67,7 @@ def after_request(response):
     elif request.url == "http://covid-19/":
         time.sleep(60)
     # just capture all cases too
-    elif not request.url.startswith("http://ogent.uk"):
+    elif not (request.url.startswith("http://ogent.uk") or request.url.startswith("http://bettercovid19data.com")):
         time.sleep(10)
         logging.info("redirecting a non o-gent url")
         return redirect("http://www.google.com")
