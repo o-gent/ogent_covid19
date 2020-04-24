@@ -383,17 +383,6 @@ def summary_table(countries: List[str]):
     
     df_list = []
     
-    # add headers
-    df_list.append(
-        [
-            "Country",
-            "Confirmed cases",
-            "Confirmed acceleration",
-            "Deaths",
-            "Deaths acceleration"
-        ]
-    )
-    
     for country in countries:
         acceleration_figures = acceleration(country)
         pop = COUNTRY_DATA[country]['population']

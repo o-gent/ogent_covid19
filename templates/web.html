@@ -35,6 +35,138 @@ div.main{
     max-width: 800px;
 }
 
+
+/*topnav section */
+    /* Add a black background color to the top navigation */
+    .topnav {
+    background-color: #333;
+    overflow: hidden;
+    position: fixed;
+    top: 0px;
+    }
+
+    /* Style the links inside the navigation bar */
+    .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    }
+
+    /* Change the color of links on hover */
+    .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+    }
+
+    /* Add a color to the active/current link */
+    .topnav a.active {
+    background-color: #4CAF50;
+    color: white;
+    }
+
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table {
+    border-spacing: 1;
+    border-collapse: collapse;
+    background: white;
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    border-radius: 2em;
+}
+table * {
+    position: relative;
+}
+table td, table th {
+    padding-left: 8px;
+    text-align: center;
+    vertical-align: middle;
+}
+table thead tr {
+    height: 60px;
+    background: #FFED86;
+    font-size: 16px;
+}
+table tbody tr {
+    height: 48px;
+    border-bottom: 1px solid #E3F1D5;
+}
+table tbody tr:last-child {
+    border: 0;
+}
+table td, table th {
+  text-align: left;
+}
+table td.l, table th.l {
+  text-align: right;
+}
+table td.c, table th.c {
+  text-align: center;
+}
+table td.r, table th.r {
+  text-align: center;
+}
+
+@media screen and (max-width: 35.5em) {
+  table {
+    display: block;
+  }
+  table > *, table tr, table td, table th {
+    display: block;
+  }
+  table thead {
+    display: none;
+  }
+  table tbody tr {
+    height: auto;
+    padding: 8px 0;
+  }
+  table tbody tr td {
+    padding-left: 45%;
+    margin-bottom: 12px;
+  }
+  table tbody tr td:last-child {
+    margin-bottom: 0;
+  }
+  table tbody tr td:before {
+    position: absolute;
+    font-weight: 700;
+    width: 40%;
+    left: 10px;
+    top: 0;
+  }
+  table tbody tr td:nth-child(1):before {
+    content: "Code";
+  }
+  table tbody tr td:nth-child(2):before {
+    content: "Stock";
+  }
+  table tbody tr td:nth-child(3):before {
+    content: "Cap";
+  }
+  table tbody tr td:nth-child(4):before {
+    content: "Inch";
+  }
+  table tbody tr td:nth-child(5):before {
+    content: "Box Type";
+  }
+}
+
 h3{
     padding-top: 2em;
 }
@@ -96,6 +228,7 @@ footer{
     padding-bottom: 2em;
 }
 
+
 </style>
 
 </head>
@@ -107,6 +240,13 @@ footer{
     <H1 style="padding: 1em;"> 
         Better Covid 19 Data
     </H1>
+
+    <div class="topnav">
+        <a class="active" href="#home">Home</a>
+        <a href="#news">News</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+    </div>
 
     <p>
         last update: {{ last_update }}
@@ -143,6 +283,39 @@ footer{
         </div>
         <input type="submit" value="Submit">
     </form>
+
+
+    <h3>
+        Summary tables
+    </h3>
+
+    <table style="width:100%; border: 1px solid grey;">
+        <thead>
+            <tr>
+                <th rowspan="2"> Country </th>
+                <th colspan="2"> Confirmed </th>
+                <th colspan="2"> Deaths </th>
+            </tr>
+            <tr>
+                <th> cases </th>
+                <th> acceleration </th>
+                <th> cases </th>
+                <th> acceleration </th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for row in table %}
+            <tr>
+                <td>{{ row[0] }}</td>
+                <td>{{ row[1] }}</td>
+                <td>{{ row[2] }}</td>
+                <td>{{ row[3] }}</td>
+                <td>{{ row[4] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 
     <h3>
@@ -197,27 +370,6 @@ footer{
 
     <p style="text-align: left;">
         This graph shows the increase of confirmed cases reported per day over the last 7 days as a percentage of the countries population. However, confirmed cases isn't a relaible way of comparing countries as every country has different test coverage, although it could give an indication of the virus spread slowing down.
-    </p>
-
-
-    <h3>
-        Summary tables
-    </h3>
-
-    <table style="width:100%; border: 1px solid grey;">
-        {% for row in table %}
-            <tr>
-                <td>{{ row[0] }}</td>
-                <td>{{ row[1] }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-                <td>{{ row[4] }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-
-    <p>
-        (units are people)
     </p>
 
     <h2> 

@@ -59,19 +59,22 @@ def after_request(response):
     logging.info(f"{datetime.now():%Y-%m-%d %H:%M:%S%z} | {request.remote_addr} | {request.url} | {request.user_agent.platform}")
 
     # lets troll
-    if request.url.startswith("http://146.148.32.5"):
-        time.sleep(10)
-        logging.info("redirecting an IP URL")
-        return redirect("http://90.207.238.183")
-    # for some reason we get a bunch of these
-    elif request.url == "http://covid-19/":
-        time.sleep(60)
-    # just capture all cases too
-    elif not (request.url.startswith("http://ogent.uk") or request.url.startswith("http://bettercovid19data.com")):
-        time.sleep(10)
-        logging.info("redirecting a non o-gent url")
-        return redirect("http://www.google.com")
-    
+    if not app.debug:
+        if request.url.startswith("http://146.148.32.5"):
+            time.sleep(10)
+            logging.info("redirecting an IP URL")
+            return redirect("http://90.207.238.183")
+        # for some reason we get a bunch of these
+        elif request.url == "http://covid-19/":
+            time.sleep(60)
+        # just capture all cases too
+        elif not (request.url.startswith("http://ogent.uk") or request.url.startswith("http://bettercovid19data.com")):
+            time.sleep(10)
+            logging.info("redirecting a non o-gent url")
+            return redirect("http://www.google.com")
+    else:
+        logging.info("app is in debug mode")
+        
     return response
 
 
