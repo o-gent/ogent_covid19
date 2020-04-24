@@ -103,7 +103,12 @@ def index():
         param += country + "=on&"
     param = param.replace(" ", "+")
 
-    summary_table = plot.summary_table(countries)
+    
+    show_all = request.args.get("Table_all")
+    if show_all == "on":
+        summary_table = plot.summary_table(plot.sorted_countries())
+    else:
+        summary_table = plot.summary_table(plot.sorted_countries()[0:10])
 
     # Render desktop version or mobile version
     # Not ideal but necessary due to matplotlib and bokeh limitations
@@ -117,7 +122,6 @@ def index():
             script_plot1="",
             div_plot1="",
             last_update=last_update,
-            countries=["All"] + sorted(list(plot.COUNTRY_DATA.keys())),
             param=param,
             table=summary_table
         )
@@ -131,7 +135,6 @@ def index():
             script_plot1=script_plot1,  
             div_plot1=div_plot1,
             last_update=last_update,
-            countries = ["All"] + sorted(list(plot.COUNTRY_DATA.keys())),
             param=param,
             table=summary_table
         )

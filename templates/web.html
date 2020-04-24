@@ -35,39 +35,6 @@ div.main{
     max-width: 800px;
 }
 
-
-/*topnav section */
-    /* Add a black background color to the top navigation */
-    .topnav {
-    background-color: #333;
-    overflow: hidden;
-    position: fixed;
-    top: 0px;
-    }
-
-    /* Style the links inside the navigation bar */
-    .topnav a {
-    float: left;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-    }
-
-    /* Change the color of links on hover */
-    .topnav a:hover {
-    background-color: #ddd;
-    color: black;
-    }
-
-    /* Add a color to the active/current link */
-    .topnav a.active {
-    background-color: #4CAF50;
-    color: white;
-    }
-
-
 td {
     text-align: center;
     vertical-align: middle;
@@ -108,9 +75,6 @@ table tbody tr {
 }
 table tbody tr:last-child {
     border: 0;
-}
-table td, table th {
-  text-align: left;
 }
 table td.l, table th.l {
   text-align: right;
@@ -194,6 +158,7 @@ body{
 
 {% endif %}
 
+/*
 label{
     background-color: #a3c2ff;
     border: none;
@@ -205,6 +170,77 @@ label{
     margin: 0.5em 1em;
     cursor: pointer;
     border-radius: 16px;
+}*/
+.checkbox {
+    width: 100%;
+    margin: 15px auto;
+    position: relative;
+    display: block;
+}
+
+.checkbox input[type="checkbox"] {
+    width: auto;
+    opacity: 0.00000001;
+    position: absolute;
+    left: 0;
+    margin-left: -20px;
+}
+.checkbox label {
+    position: relative;
+}
+.checkbox label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 4px;
+    width: 22px;
+    height: 22px;
+    transition: transform 0.28s ease;
+    border-radius: 3px;
+    border: 2px solid #7bbe72;
+}
+.checkbox label:after {
+  content: '';
+    display: block;
+    width: 10px;
+    height: 5px;
+    border-bottom: 2px solid #7bbe72;
+    border-left: 2px solid #7bbe72;
+    -webkit-transform: rotate(-45deg) scale(0);
+    transform: rotate(-45deg) scale(0);
+    transition: transform ease 0.25s;
+    will-change: transform;
+    position: absolute;
+    top: 12px;
+    left: 10px;
+}
+.checkbox input[type="checkbox"]:checked ~ label::before {
+    color: #7bbe72;
+}
+
+.checkbox input[type="checkbox"]:checked ~ label::after {
+    -webkit-transform: rotate(-45deg) scale(1);
+    transform: rotate(-45deg) scale(1);
+}
+
+.checkbox label {
+    min-height: 34px;
+    display: block;
+    padding-left: 40px;
+    margin-bottom: 0;
+    font-weight: normal;
+    cursor: pointer;
+    vertical-align: sub;
+}
+.checkbox label span {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+.checkbox input[type="checkbox"]:focus + label::before {
+    outline: 0;
 }
 
 @media only screen and (max-width: 768px) {
@@ -241,13 +277,6 @@ footer{
         Better Covid 19 Data
     </H1>
 
-    <div class="topnav">
-        <a class="active" href="#home">Home</a>
-        <a href="#news">News</a>
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
-    </div>
-
     <p>
         last update: {{ last_update }}
     </p>
@@ -267,56 +296,59 @@ footer{
 
 
     <h3>
-        ❗ Select countries / states ❗
-    </h3>
-
-    <form action="/" method="get">
-        <div class="form">
-            {% for country in countries %}
-                <div>
-                    <label class="country">
-                        <input type="checkbox" name="{{ country }}"">
-                        {{ country }}
-                    </label>
-                </div>
-            {% endfor %}
-        </div>
-        <input type="submit" value="Submit">
-    </form>
-
-
-    <h3>
         Summary tables
     </h3>
 
-    <table style="width:100%; border: 1px solid grey;">
-        <thead>
-            <tr>
-                <th rowspan="2"> Country </th>
-                <th colspan="2"> Confirmed </th>
-                <th colspan="2"> Deaths </th>
-            </tr>
-            <tr>
-                <th> cases </th>
-                <th> acceleration </th>
-                <th> cases </th>
-                <th> acceleration </th>
-            </tr>
-        </thead>
+    <form action="/" method="get">
+        <input type="hidden" name="Table_all" value="on">
+        <button>Show all countries</button>
+    </form>
 
-        <tbody>
-        {% for row in table %}
-            <tr>
-                <td>{{ row[0] }}</td>
-                <td>{{ row[1] }}</td>
-                <td>{{ row[2] }}</td>
-                <td>{{ row[3] }}</td>
-                <td>{{ row[4] }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <form action="/#country-comparison" method="get">
+        <table style="width:100%; border: 1px solid grey;">
+            <thead>
+                <tr>
+                    <th rowspan="2"> Country </th>
+                    <th colspan="2"> Confirmed </th>
+                    <th colspan="2"> Deaths </th>
+                </tr>
+                <tr>
+                    <th> cases </th>
+                    <th> acceleration </th>
+                    <th> cases </th>
+                    <th> acceleration </th>
+                </tr>
+            </thead>
 
+            <tbody>
+            {% for row in table %}
+                <tr>
+                    <td style="width:25%; text-align: left;">
+                        <div class="checkbox">
+                            <input type="checkbox" name="{{ row[0] }}", id="{{ row[0] }}"">
+                            <label class="country" for="{{ row[0] }}"><span> {{ row[0] }} </span></label>
+                        </div>
+                    </td>
+
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                </tr>
+            {% endfor %}
+
+            <tr>
+                <td colspan="5" style="text-align: center;">
+                    <input type="submit" value="Submit countries to compare">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <div id="country-comparison">
+
+    </div>
 
     <h3>
         Cumulative deaths by COVID-19

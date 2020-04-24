@@ -397,3 +397,12 @@ def summary_table(countries: List[str]):
         )
 
     return df_list
+
+
+def sorted_countries():
+    """
+    return list of countries sorted by number of deaths
+    """
+    ahh = [(country, COUNTRY_DATA[country]['data'].deaths[-1]) for country in COUNTRY_DATA.keys()]
+    sorted_countries = sorted(ahh, key=lambda x: x[1], reverse=True)
+    return [data[0] for data in sorted_countries]
