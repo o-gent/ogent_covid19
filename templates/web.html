@@ -67,7 +67,6 @@ table td, table th {
 table thead tr {
     height: 60px;
     background: #FFED86;
-    font-size: 16px;
 }
 table tbody tr {
     height: 48px;
@@ -142,21 +141,6 @@ div.form{
     -moz-columns: 2;
 }
 
-{% if mobile %}
-
-label.country{
-    font-size: x-large;
-}
-
-input{
-    font-size: x-large;
-}
-
-body{
-    font-size: 1.5em;
-}
-
-{% endif %}
 
 /*
 label{
@@ -264,6 +248,33 @@ footer{
     padding-bottom: 2em;
 }
 
+{% if mobile %}
+
+label.country{
+    font-size: x-large;
+}
+
+input{
+    font-size: x-large;
+}
+
+button{
+    font-size: x-large;
+}
+
+body{
+    font-size: 1.5em;
+}
+
+table{
+    font-size: 1em;
+}
+
+table thead{
+    font-size: 1em;
+}
+
+{% endif %}
 
 </style>
 
@@ -329,7 +340,7 @@ footer{
                             <label class="country" for="{{ row[0] }}"><span> {{ row[0] }} </span></label>
                         </div>
                     </td>
-
+                    
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
                     <td>{{ row[3] }}</td>
@@ -421,6 +432,11 @@ footer{
         <p>
             <b>disclaimer ⚠: </b> This project has been done in my free time and you should cross reference with other data sources as I give no guarantee any of the information is correct, only that I have made my best effort ensure it is. Browser/Mobile support is also questionable. 
         </p>
+
+        <p>
+            <b>Contact 📞</b> bettercovid19data@gmail.com
+        </p>
+
     
     </div>
 
